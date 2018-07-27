@@ -1,0 +1,17 @@
+{
+@a:
+	prod 2;
+	sell ?production(?my_id), ?production_price;
+	prints "SELLED";
+	buy 2, ?raw_price;
+	prints "BOUGHT";
+	endturn;
+	prints "ENDTURN";
+	if (!(?have_winner)) then
+	{
+		goto @a;
+	}
+	else {
+		prints "END";
+	}
+}

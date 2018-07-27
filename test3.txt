@@ -1,0 +1,36 @@
+{
+	prints "START";
+@c:
+	$fl = 0;
+	$i = 0;
+	$sum_fact = 0;
+	$sum_raw = 0;
+	$need_to_create = 0;
+	$sum = 0;
+@b:
+	$i = $i + 1;
+	$need_to_create = ?factories($i) * 2 - $sum_raw*;
+	prints "NEED TO CREATE";
+	print $need_to_create;
+	if ($i < ?players) then 
+	{
+		goto @b;
+	} else {}
+	
+	prints "!!!!!!!!!!!!!!!!SUM IS";
+	print $sum;	
+
+@a:
+	prod 2;
+	sell 2, ?production_price;
+	buy 2, ?raw_price;
+	endturn;
+	prints "ENDTURN";
+	if (!(?have_winner)) then
+	{
+		goto @c;
+	}
+	else {
+		prints "END";
+	}
+}

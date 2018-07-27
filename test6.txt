@@ -1,0 +1,151 @@
+{
+	$fl = 0;
+	$raw_dif_max = 0;
+	$raw_need = 0;
+	$raw_price = 0;
+	$otkl_raw = 0;
+	$crisis_raw = 0;
+	$crisis_raw_price = 0;
+	
+	$prod_dif_max = 0;
+	$prod_need = 0;
+	$crisis_prod = 0;
+	$crisis_prod_price = 0;
+@b:
+	prints "IN @b!!!";
+	$i = 0;
+	$sum = 0;
+
+	if ($crisis_raw == 1) then 
+	{
+		$k = 0;
+@d:
+		$k = $k + 1;
+		if (?result_raw_price($k) > $crisis_raw_price) then 
+		{
+			if ($k != ?my_id) then
+			{ 
+			$raw_dif_max =(?result_raw_price($k)-$crisis_raw_price);
+				print $raw_dif_max;
+			} else {
+			}
+		} else {}
+		if ($k < ?players) then
+		{
+			goto @d;
+		} else {}
+
+		$crisis_raw = 0;
+		$crisis_raw_price = -1;
+	} else {}
+	
+	if ($crisis_prod == 1) then 
+	{
+		$k = 0;
+@f:
+		$k = $k + 1;
+		prints "I COMPARE";
+		print ?result_prod_price($k);
+		print $crisis_prod_price;
+		prints "-----------";
+		if (?result_prod_price($k) < $crisis_prod_price) then 
+		{
+			if ($k != ?my_id) then
+			{
+				$l =  ?result_prod_price($k);
+				prints "result prod price is";
+				print $l;
+				if ($l != 0) then {	
+				$prod_dif_max=($crisis_prod_price 
+						- ?result_prod_price($k));
+				prints "!!!NEW DIF ON PROD IS:";
+				print $prod_dif_max;
+				} else {}
+			} else {
+				prints "ITS ME";
+			}
+		} else {}
+		if ($k < ?players) then
+		{
+			goto @f;
+		} else {}
+
+		$crisis_prod = 0;
+		$crisis_prod_price = -1;
+	} else {}
+
+	if ($fl == 1) then 
+	{
+		$j = 0;
+		$raw_need = 0;
+		$prod_need = 0;
+@c:
+		$j = $j + 1;
+		$raw_need = $raw_need + ?factories($j);
+		$prod_need = $prod_need + ?production($j);
+		if ($j < ?players) then
+		{
+			goto @c;
+		} else {}
+		prints "RAW_NEED: ";
+		print $raw_need;
+		prints "MARKET HAVE Raw: ";
+		print ?supply;
+
+		prints "PROD_NEED: ";
+		print $prod_need;
+		prints "MARKET WANT TO BUY: ";
+		print ?demand;
+
+		
+		if ($raw_need > ?supply) then
+		{
+			$crisis_raw = 1;
+			$crisis_raw_price = ?raw_price;
+			prints "CRYSY NOW ON RAW";
+		} else {}
+		if ($prod_need > ?demand) then 
+		{
+			$crisis_prod = 1;
+			$crisis_prod_price = ?production_price;
+			prints "CRYSY NOW ON PROD";
+		} else {}
+			
+		
+	} else {}	
+
+@a:
+	prod ?raw(?my_id);	
+	if ($crisis_prod == 1) then
+	{
+		prints "SELL IN CRISIS";
+		$pr_pr = ?production_price;
+		print $pr_pr;
+		print $prod_dif_max;
+		$kek = ?production_price - 5;
+		$kek = $kek - $prod_dif_max; 
+		print $kek;
+		
+		sell 2, $kek;
+	} else {
+		prints "SELL IN NORMAL";
+		sell 2, ?production_price;
+	}
+
+	if ($crisis_raw == 1) then
+	{
+		prints "BUY IN CRISIS";
+		buy 2, (?raw_price + $raw_dif_max + 5);
+	} else {
+		prints "BUY IN NORMAL";
+		buy 2, (?raw_price);
+	}
+
+	endturn;
+	$fl = 1;
+	if (!(?have_winner)) then
+	{
+		prints "NEW TURN!!!!!!!!!";
+		goto @b;
+	} else {}
+}

@@ -1,0 +1,17 @@
+{
+	$b = 1;
+	$a = 0;
+	sell 3, 5;
+	$k = ?my_id;
+	$k2 = ?raw(3);
+	print $k;
+	prod 3;
+@l:
+	if ($b < 5) then 
+	{
+		$b = $b + 1;
+		print $b;
+		goto @l;
+	} else {}
+	print ?my_id;
+}
